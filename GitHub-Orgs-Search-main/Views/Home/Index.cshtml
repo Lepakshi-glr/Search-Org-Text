@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="~/Script/jquery-1.11.0.min.js"></script>
+<script src="~/Script/jquery-ui-1.8.20.js"></script>
+
+<h2>GitHub Orgs</h2>
+<label id="error" style="color:red"></label>
+<br />
+@Html.Label("Enter Org Name")
+@Html.TextBox("OrgRepo")
+<ul id="ulProductImages"></ul>
+
+<form style="display: none" action="/Home/OrganisationRepoDetails" method="POST" id="form">
+
+    <input type="hidden" id="label" name="label" value="" />
+    <input type="hidden" id="watchers" name="watchers" value="" />
+    <input type="hidden" id="forks" name="forks" value="" />
+    <input type="hidden" id="open_issues" name="open_issues" value="" />
+    <input type="hidden" id="license" name="license" value="" />
+    <input type="hidden" id="avatar_image" name="avatar_image" value="" />
+    <input type="hidden" id="OrgName" name="OrgName" value="" />
+    <input type="hidden" id="license" name="license " value="" />
+
+</form>
+
+<script type="text/javascript">
+
+    $(document).on('ready', function () {
+
+        var url = "https://api.github.com/orgs/{org}/repos";
+
+
+        var timeout;
+        var delay = 1500;
+
+        $('#OrgRepo').keyup(function (e) {
+
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(function () {
+                GetReposData();
+            }, delay);
+        });
+
+
+
+        function GetReposData() {
+
+            $.ajax({
+
+                url: url.replace('{org}', $('#OrgRepo').val()),
+                type: 'GET',
+                data: {
+
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#error').text('');
+                    if (data) {
+                        var ulimage = $("#ulProductImages");
+                        ulimage.empty();
+                        $.map(data, function (item) {
+
+                            var $link = $("<li><a href='javascript:void(0)'>" + item.name + "</a></li>");
+
+                            $link.on("click", function () {
+                                clicked(item);
+                            });
+
+                            ulimage.append($link);
+
+                        });
+                    }
+                    else {
+
+                    }
+                },
+                error: function (request, error) {
+                    $("#ulProductImages").empty();
+                    $('#error').text("No Organisation found.");
+                }
+            });
+
+
+
+            function clicked(data) {
+
+                $("#label").val(data.name);
+                $("#watchers").val(data.watchers);
+                $("#forks").val(data.forks);
+                $("#open_issues").val(data.open_issues);
+                $("#avatar_image").val(data.owner?.avatar_url);
+                $('#OrgName').val($("#OrgRepo").val());
+                $('#license').val(data.license?.name);
+                $("#form").submit()
+            }
+        }
+
+    });
+</script>

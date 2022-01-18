@@ -1,0 +1,57 @@
+﻿@model GithubOrgSearch.Models.OrgRepoDetails
+@{
+    ViewBag.Title = "OrganisationRepoDetails";
+}
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 50%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+<button onclick="history.back()">Go Back</button>
+<h2>Search for @Model.OrgName.ToUpper()</h2>
+
+
+<table>
+    <tr>
+        <th>Public Repos</th>
+        <th>Values</th>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td>@Model.Label</td>
+    </tr>
+    <tr>
+        <td>Avatar</td>
+        <td><img src="@Model.Avatar_image" style="height:35px;width:35px" /></td>
+    </tr>
+    <tr>
+        <td>watchers</td>
+        <td>@Model.Watchers</td>
+    </tr>
+    <tr>
+        <td>forks</td>
+        <td>@Model.Forks</td>
+    </tr>
+    <tr>
+        <td>Open Issues</td>
+        <td>@Model.Open_issues</td>
+    </tr>
+    <tr>
+        <td>Licence</td>
+        <td>@Model.License</td>
+    </tr>
+</table>
